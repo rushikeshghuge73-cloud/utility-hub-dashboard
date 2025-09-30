@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Dashboard</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Tone.js for sound effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <style>
+        /* Custom Tailwind Configuration */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#1d4ed8', /* Tailwind blue-700 */
+                        'secondary': '#38bdf8', /* Tailwind sky-400 */
+                        'surface': '#f9fafb', /* Light gray/off-white */
+                        'card': '#ffffff',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+
+        /* --- Custom Attractive CSS Enhancements --- */
+        
+        /* 1. Subtle Radial Background for Depth */
+        .radial-bg {
+            background: radial-gradient(circle at top left, #e0f2fe 0%, #f9fafb 50%, #f0fdfa 100%);
+        }
+
+        /* 2. Text Gradient for Header */
+        .text-gradient {
+            background-image: linear-gradient(45deg, #1d4ed8, #38bdf8); /* Using primary and secondary colors */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* 3. Digital Clock Glow Effect (Enhanced) */
+        .clock-glow {
+            color: #1f2937; /* Dark gray for high contrast */
+            text-shadow: 0 0 8px rgba(56, 189, 248, 0.7), 0 0 20px rgba(29, 78, 216, 0.5); /* Stronger glow */
+            transition: all 0.3s ease-in-out;
+            font-weight: 700;
+        }
+
+        /* 4. Enhanced Button Hover States (Vertical Lift and Shadow) */
+        .start-btn-hover:hover {
+            transform: translateY(-3px); /* Increased lift */
+            /* Use a softer gray shadow for a white button */
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+        }
+        .reset-btn-hover:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.08);
+        }
+
+        /* 5. Custom Animation for Card Shadow (Subtle Pulse) */
+        @keyframes card-shadow-pulse {
+            0% { box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08); }
+            50% { box-shadow: 0 15px 40px -8px rgba(0, 0, 0, 0.15); }
+            100% { box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08); }
+        }
+        .tool-card-pulse {
+            animation: card-shadow-pulse 6s infinite ease-in-out; /* Slow, gentle animation */
+        }
+
+        /* 6. Swap Button Hover Rotation */
+        .swap-rotate:hover {
+            transform: rotate(180deg) scale(1.1);
+        }
+
+        /* 7. Refined Input/Select Focus Ring */
+        .input-focus-shadow:focus {
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.5); /* secondary color shadow ring */
+            border-color: #38bdf8;
+        }
+
+        /* 8. New Clock Control Button Styling */
+        .clock-control-btn-style {
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+        }
+        .clock-control-btn-style:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 10px -2px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 9. CRITICAL FIX: Set Start button background to White and text to Black */
+        #start-btn {
+            background-color: #ffffff !important; 
+            color: #1f2937 !important; /* Dark gray/nearly black text */
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<!-- APPLY CUSTOM RADIAL BACKGROUND CLASS -->
+<body class="font-sans min-h-screen p-4 sm:p-8 flex flex-col items-center justify-center radial-bg">
+
+    <!-- Header -->
+    <header class="text-center mb-12">
+        <!-- APPLY CUSTOM TEXT GRADIENT CLASS -->
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-gradient">
+            The Utility Hub
+        </h1>
+        <p class="text-gray-500 mt-2 text-lg">Clean tools for your daily tasks.</p>
+    </header>
+
+    <div class="main-container grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-6xl">
+
+        <!-- Unit Converter Card (Applied Pulse Animation) -->
+        <div class="p-6 sm:p-8 bg-card rounded-2xl border border-gray-100 transition duration-300 tool-card-pulse">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Unit Converter
+            </h2>
+
+            <div class="space-y-4">
+                <label for="from-value" class="block text-sm font-medium text-gray-700">Value to Convert</label>
+                <!-- Applied Custom Focus Shadow and Inner Shadow -->
+                <input type="number" id="from-value" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-secondary focus:border-secondary input-focus-shadow transition duration-150 hover:shadow-md shadow-inner" placeholder="Enter value">
+            </div>
+
+            <div class="flex items-center justify-between my-6 space-x-4">
+                <div class="w-5/12">
+                    <label for="from-unit" class="block text-sm font-medium text-gray-700">From</label>
+                    <!-- Applied Custom Focus Shadow and Inner Shadow -->
+                    <select id="from-unit" class="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-secondary focus:border-secondary input-focus-shadow transition duration-150 hover:shadow-md shadow-inner">
+                        <option value="celsius">Celsius</option>
+                        <option value="fahrenheit">Fahrenheit</option>
+                        <option value="kilograms">Kilograms</option>
+                        <option value="pounds">Pounds</option>
+                        <option value="meters">Meters</option>
+                        <option value="feet">Feet</option>
+                    </select>
+                </div>
+                <!-- Swap button with enhanced rotation -->
+                <button id="swap-btn" class="p-2 mt-6 rounded-full bg-gradient-to-r from-secondary to-primary text-white shadow-lg hover:shadow-xl swap-rotate transition duration-300 ease-in-out">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" transform="rotate(90 10 10)" />
+                    </svg>
+                </button>
+                <div class="w-5/12">
+                    <label for="to-unit" class="block text-sm font-medium text-gray-700">To</label>
+                    <!-- Applied Custom Focus Shadow and Inner Shadow -->
+                    <select id="to-unit" class="w-full p-3 border border-gray-300 rounded-lg bg-white focus:ring-secondary focus:border-secondary input-focus-shadow transition duration-150 hover:shadow-md shadow-inner">
+                        <option value="fahrenheit">Fahrenheit</option>
+                        <option value="celsius">Celsius</option>
+                        <option value="pounds">Pounds</option>
+                        <option value="kilograms">Kilograms</option>
+                        <option value="feet">Feet</option>
+                        <option value="meters">Meters</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-8 p-4 bg-primary/10 rounded-xl text-center">
+                <p class="text-sm font-medium text-primary">Converted Result:</p>
+                <div id="result-display" class="text-3xl font-extrabold text-primary mt-1 transition duration-150 hover:text-secondary">0.00</div>
+            </div>
+        </div>
+
+        <!-- Clock & Timer Card (Applied Pulse Animation) -->
+        <div class="p-6 sm:p-8 bg-card rounded-2xl border border-gray-100 transition duration-300 tool-card-pulse flex flex-col">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Digital Clock
+            </h2>
+
+            <!-- Clock Display with Enhanced Glow Effect -->
+            <div id="clock-display" class="text-6xl sm:text-7xl font-mono text-gray-900 bg-gray-50 p-4 rounded-xl text-center mb-4 shadow-inner clock-glow">
+                00:00:00
+            </div>
+
+            <!-- CLOCK CONTROL BUTTON -->
+            <button id="clock-control-btn" class="w-full py-2 px-4 mb-8 bg-gray-100 text-gray-700 font-semibold rounded-lg clock-control-btn-style">
+                Pause Clock
+            </button>
+            
+            <hr class="my-4 border-gray-200">
+
+            <!-- Countdown Timer -->
+            <h3 class="text-xl font-bold mb-4 text-gray-800 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 9 0 01-18 0 9 9 0 0118 0z" />
+                </svg>
+                Countdown Timer
+            </h3>
+
+            <div id="timer-inputs" class="flex space-x-3 mb-4">
+                <!-- Applied Custom Focus Shadow and Inner Shadow -->
+                <input type="number" id="timer-minutes" class="w-1/2 p-3 border border-gray-300 rounded-lg text-center focus:ring-secondary focus:border-secondary input-focus-shadow transition duration-150 hover:shadow-md shadow-inner" placeholder="Minutes (M)" min="0">
+                <!-- Applied Custom Focus Shadow and Inner Shadow -->
+                <input type="number" id="timer-seconds" class="w-1/2 p-3 border border-gray-300 rounded-lg text-center focus:ring-secondary focus:border-secondary input-focus-shadow transition duration-150 hover:shadow-md shadow-inner" placeholder="Seconds (S)" min="0" max="59">
+            </div>
+
+            <div class="flex space-x-3 mb-6">
+                <!-- START BUTTON: Now styled with white background and black text -->
+                <button id="start-btn" class="flex-1 py-3 px-4 font-semibold rounded-lg shadow-lg start-btn-hover transition duration-150">
+                    Start
+                </button>
+                <!-- RESET BUTTON -->
+                <button id="reset-btn" class="flex-1 py-3 px-4 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md reset-btn-hover transition duration-150">
+                    Reset
+                </button>
+            </div>
+
+            <!-- Timer Display with Enhanced Glow Effect -->
+            <div id="timer-display" class="text-5xl font-mono text-secondary mt-auto p-4 bg-secondary/10 rounded-xl text-center shadow-inner clock-glow">
+                00:00
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Tone.js for the simple timer alarm sound
+        const synth = new Tone.MembraneSynth().toDestination();
+        const playAlarm = () => {
+            if (Tone.context.state !== 'running') {
+                Tone.start();
+            }
+            synth.triggerAttackRelease("C4", "8n");
+            synth.triggerAttackRelease("G4", "8n", "+0.2");
+        };
+
+        // ===============================
+        // UNIT CONVERTER LOGIC
+        // ===============================
+
+        const valueInput = document.getElementById('from-value');
+        const fromUnitSelect = document.getElementById('from-unit');
+        const toUnitSelect = document.getElementById('to-unit');
+        const swapBtn = document.getElementById('swap-btn');
+        const resultDisplay = document.getElementById('result-display');
+
+        /**
+         * Performs the unit conversion based on selected units and value.
+         */
+        function convert() {
+            const value = parseFloat(valueInput.value);
+            const fromUnit = fromUnitSelect.value;
+            const toUnit = toUnitSelect.value;
+            let convertedValue;
+
+            if (isNaN(value)) {
+                resultDisplay.textContent = '0.00';
+                return;
+            }
+
+            // Conversion Logic
+            switch (fromUnit) {
+                // Temperature (Celsius)
+                case 'celsius':
+                    convertedValue = (toUnit === 'fahrenheit') ? (value * 9/5) + 32 : value;
+                    break;
+                // Temperature (Fahrenheit)
+                case 'fahrenheit':
+                    convertedValue = (toUnit === 'celsius') ? (value - 32) * 5/9 : value;
+                    break;
+                // Weight (Kilograms)
+                case 'kilograms':
+                    convertedValue = (toUnit === 'pounds') ? value * 2.20462 : value;
+                    break;
+                // Weight (Pounds)
+                case 'pounds':
+                    convertedValue = (toUnit === 'kilograms') ? value / 2.20462 : value;
+                    break;
+                // Distance (Meters)
+                case 'meters':
+                    convertedValue = (toUnit === 'feet') ? value * 3.28084 : value;
+                    break;
+                // Distance (Feet)
+                case 'feet':
+                    convertedValue = (toUnit === 'meters') ? value / 3.28084 : value;
+                    break;
+                default:
+                    convertedValue = value;
+            }
+
+            // Display the result
+            resultDisplay.textContent = convertedValue.toFixed(2);
+        }
+
+        /**
+         * Swaps the values of the 'from' and 'to' unit dropdowns.
+         */
+        function swapUnits() {
+            const tempFrom = fromUnitSelect.value;
+            const tempTo = toUnitSelect.value;
+            fromUnitSelect.value = tempTo;
+            toUnitSelect.value = tempFrom;
+            convert();
+        }
+
+        // Event Listeners for instant conversion
+        valueInput.addEventListener('input', convert);
+        fromUnitSelect.addEventListener('change', convert);
+        toUnitSelect.addEventListener('change', convert);
+        swapBtn.addEventListener('click', swapUnits);
+
+        // Run conversion once on load to initialize display
+        convert();
+
+
+        // ===============================
+        // CLOCK & TIMER LOGIC
+        // ===============================
+
+        const clockDisplay = document.getElementById('clock-display');
+        const clockControlBtn = document.getElementById('clock-control-btn'); // New reference for clock button
+        const timerMinutesInput = document.getElementById('timer-minutes');
+        const timerSecondsInput = document.getElementById('timer-seconds');
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const timerDisplay = document.getElementById('timer-display');
+        const timerInputs = document.getElementById('timer-inputs');
+
+
+        let timerInterval;
+        let clockInterval; // New interval variable
+        let totalSeconds = 0;
+        let isRunning = false;
+        let isClockRunning = true; // State for the digital clock
+
+        /**
+         * Updates the digital clock display every second.
+         */
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            clockDisplay.textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        /**
+         * Starts or stops the digital clock.
+         */
+        function toggleClock() {
+            if (isClockRunning) {
+                // Pause Clock
+                clearInterval(clockInterval);
+                clockControlBtn.textContent = 'Resume Clock';
+                // Change to secondary color for the "Resume" state
+                clockControlBtn.classList.remove('bg-gray-100', 'text-gray-700');
+                clockControlBtn.classList.add('bg-secondary', 'text-white', 'shadow-md', 'hover:bg-secondary/90');
+                isClockRunning = false;
+            } else {
+                // Resume Clock
+                clockInterval = setInterval(updateClock, 1000);
+                clockControlBtn.textContent = 'Pause Clock';
+                // Change back to subtle gray for the "Pause" state
+                clockControlBtn.classList.remove('bg-secondary', 'text-white', 'shadow-md', 'hover:bg-secondary/90');
+                clockControlBtn.classList.add('bg-gray-100', 'text-gray-700');
+                isClockRunning = true;
+            }
+        }
+
+        // Initial clock start
+        clockInterval = setInterval(updateClock, 1000);
+        updateClock();
+
+        // Event listener for the new clock control button
+        clockControlBtn.addEventListener('click', toggleClock);
+
+        /**
+         * Controls the start/pause/resume functionality of the timer.
+         */
+        function toggleTimer() {
+            // Hex values for Tailwind colors: Primary: #1d4ed8, Secondary: #38bdf8
+            const PRIMARY_COLOR = '#1d4ed8';
+            const SECONDARY_COLOR = '#38bdf8';
+            const BLACK_TEXT = '#1f2937';
+            const WHITE_BG = '#ffffff';
+
+            if (isRunning) {
+                // Pause Timer
+                clearInterval(timerInterval);
+                startBtn.textContent = 'Resume';
+                // Set background and text color for Resume state (Secondary background, White text)
+                // FIX: Use hex code instead of undefined var(--secondary-color)
+                startBtn.style.backgroundColor = SECONDARY_COLOR;
+                startBtn.style.color = WHITE_BG;
+                isRunning = false;
+            } else {
+                // Start or Resume Timer
+                if (startBtn.textContent === 'Start') {
+                    // Initial start logic
+                    const minutes = parseInt(timerMinutesInput.value) || 0;
+                    const seconds = parseInt(timerSecondsInput.value) || 0;
+                    totalSeconds = minutes * 60 + seconds;
+
+                    if (totalSeconds <= 0) {
+                        // Use a custom message display instead of alert()
+                        timerDisplay.textContent = 'Set Time!';
+                        setTimeout(() => timerDisplay.textContent = '00:00', 1500);
+                        return;
+                    }
+                } else if (timerDisplay.textContent === '00:00' || timerDisplay.textContent === 'Time\'s Up!') {
+                     // Reset state if timer finished
+                    resetTimer();
+                    const minutes = parseInt(timerMinutesInput.value) || 0;
+                    const seconds = parseInt(timerSecondsInput.value) || 0;
+                    totalSeconds = minutes * 60 + seconds;
+                }
+
+                startBtn.textContent = 'Pause';
+                // Set background and text color for Pause state (Primary background, White text)
+                // FIX: Use hex code instead of undefined var(--primary-color)
+                startBtn.style.backgroundColor = PRIMARY_COLOR;
+                startBtn.style.color = WHITE_BG;
+                isRunning = true;
+                timerInputs.style.opacity = 0.7; // Visually indicate inputs are locked
+
+                timerInterval = setInterval(() => {
+                    if (totalSeconds <= 0) {
+                        clearInterval(timerInterval);
+                        timerDisplay.textContent = 'Time\'s Up!';
+                        playAlarm();
+                        // When time's up, reset button text to 'Start' and ensure white background/black text
+                        startBtn.textContent = 'Start';
+                        startBtn.style.backgroundColor = WHITE_BG;
+                        startBtn.style.color = BLACK_TEXT;
+                        isRunning = false;
+                        timerInputs.style.opacity = 1;
+                        return;
+                    }
+
+                    const displayMinutes = Math.floor(totalSeconds / 60);
+                    const displaySeconds = totalSeconds % 60;
+                    timerDisplay.textContent = `${String(displayMinutes).padStart(2, '0')}:${String(displaySeconds).padStart(2, '0')}`;
+                    totalSeconds--;
+                }, 1000);
+            }
+        }
+
+        /**
+         * Resets the timer to its initial state.
+         */
+        function resetTimer() {
+            // Hex values for Tailwind colors: Primary: #1d4ed8, Secondary: #38bdf8
+            const BLACK_TEXT = '#1f2937';
+            const WHITE_BG = '#ffffff';
+
+            clearInterval(timerInterval);
+            totalSeconds = 0;
+            isRunning = false;
+            timerDisplay.textContent = '00:00';
+            timerMinutesInput.value = '';
+            timerSecondsInput.value = '';
+            // FIX: Ensure button text is explicitly set to 'Start' and uses the white background/black text
+            startBtn.textContent = 'Start'; 
+            startBtn.style.backgroundColor = WHITE_BG;
+            startBtn.style.color = BLACK_TEXT;
+            timerInputs.style.opacity = 1;
+        }
+
+        // Event Listeners for Timer Controls
+        startBtn.addEventListener('click', toggleTimer);
+        resetBtn.addEventListener('click', resetTimer);
+
+        // Allow 'Enter' key to start timer from input fields
+        timerMinutesInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') toggleTimer(); });
+        timerSecondsInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') toggleTimer(); });
+    </script>
+</body>
+</html>
